@@ -1,20 +1,20 @@
 package com.wegarden.api.users;
 
 public class ApiResponse {
-    private Boolean success;
+    private int status;
     private String message;
 
-    public ApiResponse(Boolean success, String message) {
-        this.success = success;
+    public ApiResponse(int status, String message) {
+        this.status = status;
         this.message = message;
     }
 
-    public Boolean getSuccess() {
-        return success;
+    public int getStatus() {
+        return status;
     }
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getMessage() {
