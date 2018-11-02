@@ -9,9 +9,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 You will need to create a local mysql database with the same credentials(or update it) in the application.properties file before launching the application
 
-```
-
-```
 
 ### Building
 To launch the application, do the following command
