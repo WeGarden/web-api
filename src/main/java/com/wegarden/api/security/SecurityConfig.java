@@ -54,6 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        final String[] AUTH_WHITELIST = {
+                // -- swagger ui
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/v2/api-docs",
+                "/webjars/**"
+        };
         http
                 .cors()
                     .and()
@@ -66,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                 .authorizeRequests()
+                    .antMatchers(AUTH_WHITELIST).permitAll()
                     .antMatchers("/","/api",
                             "/favicon.ico",
                             "/**/*.png",
@@ -78,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers("/api/auth/**")
                         .permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/users/**")
+                    .antMatchers(HttpMethod.GET, "/api/users/**","/swagger-ui.html")
                         .permitAll()
                     .anyRequest()
                         .authenticated();
