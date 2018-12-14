@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,13 +34,19 @@ public class GardenService {
 
     private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
 
+    public List<GardenDTO> getGardens(){
+        return gardenRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
     public List<GardenDTO> getGardenCreatedBy(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         return gardenRepository.findAllByUser(user)
                 .stream()
-                .map(garden -> modelMapper.map(garden,GardenDTO.class))
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -52,18 +59,34 @@ public class GardenService {
             geolocation = geolocationRepository.save(geolocation);
         }
 
-//        Garden garden = new Garden(user,
-//                gardenDTO.getName(),
-//                gardenDTO.getDescription(),
-//                gardenDTO.getGardenType(),
-//                geolocation,
-//                gardenDTO.isPrivate());
-
-        Garden garden = modelMapper.map(gardenDTO,Garden.class);
-        garden.setId(0L);
+        Garden garden = convertToEntity(gardenDTO);
         garden.setLocation(geolocation);
+        garden.setUser(user);
+
+
 
         gardenRepository.save(garden);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    private GardenDTO convertToDTO(Garden garden){
+        GardenDTO gardenDTO =  modelMapper.map(garden,GardenDTO.class);
+        if(garden.getImage() != null){
+            gardenDTO.setImage(Base64Utils.encodeToString(garden.getImage()));
+        }
+        return gardenDTO;
+    }
+
+    private Garden convertToEntity(GardenDTO gardenDTO){
+        Garden garden =  modelMapper.map(gardenDTO,Garden.class);
+        if(gardenDTO.getImage() != null){
+            String data = gardenDTO.getImage() ;
+            String base64Image = data.split(",")[1];
+            garden.setImage(Base64Utils.decodeFromString(base64Image));
+        }
+        garden.setId(0L);
+        return garden;
+    }
+
+
 }

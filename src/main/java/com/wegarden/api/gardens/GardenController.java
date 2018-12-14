@@ -22,8 +22,8 @@ public class GardenController {
     }
 
     @GetMapping
-    public List<Garden> getGardens() {
-        return gardenRepository.findAll();
+    public List<GardenDTO> getGardens() {
+        return gardenService.getGardens();
     }
 
     @GetMapping("/user/{id}")

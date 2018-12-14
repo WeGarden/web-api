@@ -21,8 +21,11 @@ public class GardenDTO {
 
     private Geolocation location;
 
-    @JsonProperty
+    @JsonProperty("private")
     private boolean isPrivate;
+
+    // base64 image
+    private String image;
 
     public String getName() {
         return name;
@@ -70,5 +73,13 @@ public class GardenDTO {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
