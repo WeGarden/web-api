@@ -15,13 +15,7 @@ import java.util.TimeZone;
         WebApiApplication.class,
 		Jsr310JpaConverters.class
 })
-public class WebApiApplication extends SpringBootServletInitializer {
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(WebApiApplication.class);
-    }
-
+public class WebApiApplication  {
 
     @PostConstruct
     void init() {
