@@ -1,5 +1,6 @@
 package com.wegarden.api.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
@@ -29,6 +30,7 @@ public class User {
 
     @NotBlank
     @Size(max = 100)
+    @JsonIgnore
     private String password;
 
     public User(String username, String email, String password) {
