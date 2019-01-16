@@ -1,6 +1,6 @@
 package com.wegarden.api.gardens;
 
-import com.wegarden.api.gardens.payload.GardenRequest;
+import com.wegarden.api.gardens.payload.GardenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +27,13 @@ public class GardenController {
     }
 
     @GetMapping("/user/{id}")
-    public List<Garden> getGardensCreatedBy(@PathVariable(value = "id") Long userId){
+    public List<GardenDTO> getGardensCreatedBy(@PathVariable(value = "id") Long userId){
         return gardenService.getGardenCreatedBy(userId);
     }
 
     @PostMapping
-    public ResponseEntity<?> addGarden(@RequestBody GardenRequest gardenRequest){
-        return gardenService.addGarden(gardenRequest);
+    public ResponseEntity<?> addGarden(@RequestBody GardenDTO gardenDTO){
+        return gardenService.addGarden(gardenDTO);
     }
 
 
