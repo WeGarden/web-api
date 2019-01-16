@@ -1,6 +1,7 @@
 package com.wegarden.api.users;
 
 import com.wegarden.api.security.JwtTokenProvider;
+import com.wegarden.api.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -52,13 +53,14 @@ public class AuthenticationController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(userPrincipal.getId(),jwt));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity<>(new ApiResponse(RESPONSE_STATE.USERNAME_ALREADY_USED.getCode(), "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
