@@ -1,19 +1,23 @@
 package com.wegarden.api.gardens;
 
 import com.wegarden.api.exception.ResourceNotFoundException;
-import com.wegarden.api.gardens.payload.GardenRequest;
+import com.wegarden.api.gardens.payload.GardenDTO;
 import com.wegarden.api.geolocation.Geolocation;
 import com.wegarden.api.geolocation.GeolocationRepository;
 import com.wegarden.api.users.User;
 import com.wegarden.api.users.UserRepository;
+import com.wegarden.api.util.ModelUtilMapper;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GardenService {
@@ -28,30 +32,61 @@ public class GardenService {
     @Autowired
     private GeolocationRepository geolocationRepository;
 
+    private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
 
-    public List<Garden> getGardenCreatedBy(Long userId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
-        return gardenRepository.findAllByUser(user);
+    public List<GardenDTO> getGardens(){
+        return gardenRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> addGarden(GardenRequest gardenRequest){
-        Long userId = gardenRequest.getUserId();
+    public List<GardenDTO> getGardenCreatedBy(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
-        Geolocation geolocation = gardenRequest.getLocation();
+        return gardenRepository.findAllByUser(user)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ResponseEntity<?> addGarden(GardenDTO gardenDTO){
+        Long userId = gardenDTO.getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        Geolocation geolocation = gardenDTO.getLocation();
         if(geolocation != null){
             geolocation = geolocationRepository.save(geolocation);
         }
 
-        Garden garden = new Garden(user,
-                gardenRequest.getName(),
-                gardenRequest.getDescription(),
-                gardenRequest.getGardenType(),
-                geolocation,
-                gardenRequest.isPrivate());
+        Garden garden = convertToEntity(gardenDTO);
+        garden.setLocation(geolocation);
+        garden.setUser(user);
+
+
 
         gardenRepository.save(garden);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    private GardenDTO convertToDTO(Garden garden){
+        GardenDTO gardenDTO =  modelMapper.map(garden,GardenDTO.class);
+        if(garden.getImage() != null){
+            gardenDTO.setImage(Base64Utils.encodeToString(garden.getImage()));
+        }
+        return gardenDTO;
+    }
+
+    private Garden convertToEntity(GardenDTO gardenDTO){
+        Garden garden =  modelMapper.map(gardenDTO,Garden.class);
+        if(gardenDTO.getImage() != null){
+            String data = gardenDTO.getImage() ;
+            String base64Image = data.split(",")[1];
+            garden.setImage(Base64Utils.decodeFromString(base64Image));
+        }
+        garden.setId(0L);
+        return garden;
+    }
+
+
 }

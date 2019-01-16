@@ -6,7 +6,7 @@ import com.wegarden.api.geolocation.Geolocation;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-public class GardenRequest {
+public class GardenDTO {
     @NotBlank
     private String name;
 
@@ -21,8 +21,11 @@ public class GardenRequest {
 
     private Geolocation location;
 
-    @JsonProperty
+    @JsonProperty("private")
     private boolean isPrivate;
+
+    // base64 image
+    private String image;
 
     public String getName() {
         return name;
@@ -70,5 +73,13 @@ public class GardenRequest {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

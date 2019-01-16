@@ -27,6 +27,10 @@ public class Garden {
 
     private boolean isPrivate;
 
+    @Lob
+    private byte[] image;
+
+
     public Garden(User user, @NotBlank String name, String description, String gardenType, Geolocation location, boolean isPrivate) {
         this.user = user;
         this.name = name;
@@ -94,5 +98,13 @@ public class Garden {
 
     public void setLocation(Geolocation location) {
         this.location = location;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
