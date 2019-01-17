@@ -1,7 +1,8 @@
 package com.wegarden.api.gardens;
 
 import com.wegarden.api.exception.ResourceNotFoundException;
-import com.wegarden.api.gardens.payload.GardenDTO;
+import com.wegarden.api.gardens.payload.GardenRequest;
+import com.wegarden.api.gardens.payload.GardenResponse;
 import com.wegarden.api.geolocation.Geolocation;
 import com.wegarden.api.geolocation.GeolocationRepository;
 import com.wegarden.api.users.User;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class GardenService {
 
     private static final Logger logger = LoggerFactory.getLogger(GardenService.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -34,14 +36,14 @@ public class GardenService {
 
     private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
 
-    public List<GardenDTO> getGardens(){
+    public List<GardenResponse> getGardens(){
         return gardenRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<GardenDTO> getGardenCreatedBy(Long userId){
+    public List<GardenResponse> getGardenCreatedBy(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         return gardenRepository.findAllByUser(user)
@@ -50,38 +52,36 @@ public class GardenService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> addGarden(GardenDTO gardenDTO){
-        Long userId = gardenDTO.getUserId();
+    public GardenResponse addGarden(GardenRequest gardenRequest){
+        Long userId = gardenRequest.getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
-        Geolocation geolocation = gardenDTO.getLocation();
+        Geolocation geolocation = gardenRequest.getLocation();
         if(geolocation != null){
             geolocation = geolocationRepository.save(geolocation);
         }
 
-        Garden garden = convertToEntity(gardenDTO);
+        Garden garden = convertToEntity(gardenRequest);
         garden.setLocation(geolocation);
         garden.setUser(user);
-
-
-
-        gardenRepository.save(garden);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        garden = gardenRepository.save(garden);
+        GardenResponse gardenResponse = convertToDTO(garden);
+        return gardenResponse;
     }
 
-    private GardenDTO convertToDTO(Garden garden){
-        GardenDTO gardenDTO =  modelMapper.map(garden,GardenDTO.class);
+    private GardenResponse convertToDTO(Garden garden){
+        GardenResponse gardenResponse=  modelMapper.map(garden, GardenResponse.class);
         if(garden.getImage() != null){
-            gardenDTO.setImage(Base64Utils.encodeToString(garden.getImage()));
+            gardenResponse.setImage(Base64Utils.encodeToString(garden.getImage()));
         }
-        return gardenDTO;
+        return gardenResponse;
     }
 
-    private Garden convertToEntity(GardenDTO gardenDTO){
-        Garden garden =  modelMapper.map(gardenDTO,Garden.class);
-        if(gardenDTO.getImage() != null){
-            String data = gardenDTO.getImage() ;
-            String base64Image = data.split(",")[1];
+    private Garden convertToEntity(GardenRequest gardenRequest){
+        Garden garden =  modelMapper.map(gardenRequest,Garden.class);
+        if(gardenRequest.getImage() != null){
+            String[] data = gardenRequest.getImage().split(",") ; // handle case where base64 has this kind of form:"data:image/jpeg;base64,.."
+            String base64Image = (data.length==2)?data[1]:data[0];
             garden.setImage(Base64Utils.decodeFromString(base64Image));
         }
         garden.setId(0L);

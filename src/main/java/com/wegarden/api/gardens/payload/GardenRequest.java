@@ -6,17 +6,15 @@ import com.wegarden.api.geolocation.Geolocation;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-public class GardenDTO {
+public class GardenRequest {
     @NotBlank
     private String name;
 
     @NotBlank
     private Long userId;
 
-    @Valid
     private String description;
 
-    @Valid
     private String gardenType;
 
     private Geolocation location;
