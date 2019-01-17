@@ -3,7 +3,6 @@ package com.wegarden.api.gardens.payload;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wegarden.api.geolocation.Geolocation;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 public class GardenRequest {

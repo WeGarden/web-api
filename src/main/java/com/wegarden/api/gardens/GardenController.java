@@ -28,6 +28,12 @@ public class GardenController {
         return gardenService.getGardens();
     }
 
+    @GetMapping("/{id}")
+    public GardenResponse getGardenById(@PathVariable(value = "id") Long gardenId){
+        return gardenService.getGardenById(gardenId);
+    }
+
+
     @GetMapping("/user/{id}")
     public List<GardenResponse> getGardensCreatedBy(@PathVariable(value = "id") Long userId){
         return gardenService.getGardenCreatedBy(userId);
@@ -42,6 +48,7 @@ public class GardenController {
         return ResponseEntity.created(location)
                 .body(gardenResponse.getId());
     }
+
 
 
 

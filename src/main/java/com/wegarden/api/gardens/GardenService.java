@@ -65,9 +65,16 @@ public class GardenService {
         garden.setLocation(geolocation);
         garden.setUser(user);
         garden = gardenRepository.save(garden);
-        GardenResponse gardenResponse = convertToDTO(garden);
-        return gardenResponse;
+        return convertToDTO(garden);
     }
+
+    public GardenResponse getGardenById(Long gardenId){
+        Garden garden = gardenRepository.findById(gardenId)
+                .orElseThrow(() -> new ResourceNotFoundException("Garden","id",gardenId));
+        return convertToDTO(garden);
+    }
+
+
 
     private GardenResponse convertToDTO(Garden garden){
         GardenResponse gardenResponse=  modelMapper.map(garden, GardenResponse.class);
