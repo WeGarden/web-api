@@ -1,6 +1,7 @@
 package com.wegarden.api.gardens;
 
 import com.wegarden.api.exception.ResourceNotFoundException;
+import com.wegarden.api.gardens.payload.GardenConverter;
 import com.wegarden.api.gardens.payload.GardenRequest;
 import com.wegarden.api.gardens.payload.GardenResponse;
 import com.wegarden.api.geolocation.Geolocation;
@@ -34,12 +35,13 @@ public class GardenService {
     @Autowired
     private GeolocationRepository geolocationRepository;
 
-    private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
+    @Autowired
+    private GardenConverter gardenConverter;
 
     public List<GardenResponse> getGardens(){
         return gardenRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(garden -> gardenConverter.convertToDTO(garden))
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +50,7 @@ public class GardenService {
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         return gardenRepository.findAllByUser(user)
                 .stream()
-                .map(this::convertToDTO)
+                .map(garden -> gardenConverter.convertToDTO(garden))
                 .collect(Collectors.toList());
     }
 
@@ -61,38 +63,17 @@ public class GardenService {
             geolocation = geolocationRepository.save(geolocation);
         }
 
-        Garden garden = convertToEntity(gardenRequest);
+        Garden garden = gardenConverter.convertToEntity(gardenRequest);
         garden.setLocation(geolocation);
         garden.setUser(user);
         garden = gardenRepository.save(garden);
-        return convertToDTO(garden);
+        return gardenConverter.convertToDTO(garden);
     }
 
     public GardenResponse getGardenById(Long gardenId){
         Garden garden = gardenRepository.findById(gardenId)
                 .orElseThrow(() -> new ResourceNotFoundException("Garden","id",gardenId));
-        return convertToDTO(garden);
-    }
-
-
-
-    private GardenResponse convertToDTO(Garden garden){
-        GardenResponse gardenResponse=  modelMapper.map(garden, GardenResponse.class);
-        if(garden.getImage() != null){
-            gardenResponse.setImage(Base64Utils.encodeToString(garden.getImage()));
-        }
-        return gardenResponse;
-    }
-
-    private Garden convertToEntity(GardenRequest gardenRequest){
-        Garden garden =  modelMapper.map(gardenRequest,Garden.class);
-        if(gardenRequest.getImage() != null){
-            String[] data = gardenRequest.getImage().split(",") ; // handle case where base64 has this kind of form:"data:image/jpeg;base64,.."
-            String base64Image = (data.length==2)?data[1]:data[0];
-            garden.setImage(Base64Utils.decodeFromString(base64Image));
-        }
-        garden.setId(0L);
-        return garden;
+        return gardenConverter.convertToDTO(garden);
     }
 
 
