@@ -29,15 +29,20 @@ public class GardenController {
         return gardenService.getGardens();
     }
 
-    @GetMapping("/{id}")
-    public GardenResponse getGardenById(@PathVariable(value = "id") Long gardenId){
+    @GetMapping("/{gardenId}")
+    public GardenResponse getGardenById(@PathVariable(value = "gardenId") Long gardenId){
         return gardenService.getGardenById(gardenId);
     }
 
 
-    @GetMapping("/user/{id}")
-    public List<GardenResponse> getGardensCreatedBy(@PathVariable(value = "id") Long userId){
+    @GetMapping("/user/{userId}/")
+    public List<GardenResponse> getGardensCreatedByUser(@PathVariable(value = "userId") Long userId){
         return gardenService.getGardenCreatedBy(userId);
+    }
+
+    @GetMapping("/user/username/{username}")
+    public List<GardenResponse> getGardensCreatedByUser(@PathVariable(value = "username") String username){
+        return gardenService.getGardenCreatedBy(username);
     }
 
     @PostMapping

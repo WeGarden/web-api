@@ -55,6 +55,16 @@ public class GardenService {
                 .collect(Collectors.toList());
     }
 
+    public List<GardenResponse> getGardenCreatedBy(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User","username",username));
+        return gardenRepository.findAllByUser(user)
+                .stream()
+                .map(garden -> gardenConverter.convertToDTO(garden))
+                .collect(Collectors.toList());
+    }
+
+
     public GardenResponse addGarden(GardenRequest gardenRequest){
         Long userId = gardenRequest.getUserId();
         User user = userRepository.findById(userId)
@@ -77,6 +87,8 @@ public class GardenService {
                 .orElseThrow(() -> new ResourceNotFoundException("Garden","id",gardenId));
         return gardenConverter.convertToDTO(garden);
     }
+
+
 
 
 }
