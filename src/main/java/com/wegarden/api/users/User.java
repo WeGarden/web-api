@@ -1,15 +1,14 @@
 package com.wegarden.api.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wegarden.api.users.roles.Role;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -30,8 +29,16 @@ public class User {
 
     @NotBlank
     @Size(max = 100)
-    @JsonIgnore
     private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+
+
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -73,5 +80,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
