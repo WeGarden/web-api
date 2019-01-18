@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,7 +60,8 @@ public class GardenService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         Geolocation geolocation = gardenRequest.getLocation();
-        if(geolocation != null){
+        // check if object is null
+        if(ObjectUtils.isEmpty(geolocation)){
             geolocation = geolocationRepository.save(geolocation);
         }
 

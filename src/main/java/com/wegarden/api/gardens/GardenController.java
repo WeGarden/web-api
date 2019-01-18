@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class GardenController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addGarden(@RequestBody GardenRequest gardenRequest){
+    public ResponseEntity<Long> addGarden(@RequestBody @Valid GardenRequest gardenRequest){
         GardenResponse gardenResponse = gardenService.addGarden(gardenRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/gardens/{id}")

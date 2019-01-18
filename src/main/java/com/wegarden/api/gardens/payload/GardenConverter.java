@@ -5,6 +5,7 @@ import com.wegarden.api.util.ModelUtilMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.StringUtils;
 
 @Component
 public class GardenConverter {
@@ -19,7 +20,8 @@ public class GardenConverter {
 
     public Garden convertToEntity(GardenRequest gardenRequest){
         Garden garden =  modelMapper.map(gardenRequest,Garden.class);
-        if(gardenRequest.getImage() != null){
+        // check if image is null
+        if(StringUtils.isEmpty(gardenRequest.getImage())){
             String[] data = gardenRequest.getImage().split(",") ; // handle case where base64 has this kind of form:"data:image/jpeg;base64,.."
             String base64Image = (data.length==2)?data[1]:data[0];
             garden.setImage(Base64Utils.decodeFromString(base64Image));
