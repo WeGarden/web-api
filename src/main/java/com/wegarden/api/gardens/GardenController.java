@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -28,13 +29,24 @@ public class GardenController {
         return gardenService.getGardens();
     }
 
-    @GetMapping("/user/{id}")
-    public List<GardenResponse> getGardensCreatedBy(@PathVariable(value = "id") Long userId){
+    @GetMapping("/{gardenId}")
+    public GardenResponse getGardenById(@PathVariable(value = "gardenId") Long gardenId){
+        return gardenService.getGardenById(gardenId);
+    }
+
+
+    @GetMapping("/user/{userId}/")
+    public List<GardenResponse> getGardensCreatedByUser(@PathVariable(value = "userId") Long userId){
         return gardenService.getGardenCreatedBy(userId);
     }
 
+    @GetMapping("/user/username/{username}")
+    public List<GardenResponse> getGardensCreatedByUser(@PathVariable(value = "username") String username){
+        return gardenService.getGardenCreatedBy(username);
+    }
+
     @PostMapping
-    public ResponseEntity<Long> addGarden(@RequestBody GardenRequest gardenRequest){
+    public ResponseEntity<Long> addGarden(@RequestBody @Valid GardenRequest gardenRequest){
         GardenResponse gardenResponse = gardenService.addGarden(gardenRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/gardens/{id}")
@@ -42,6 +54,7 @@ public class GardenController {
         return ResponseEntity.created(location)
                 .body(gardenResponse.getId());
     }
+
 
 
 

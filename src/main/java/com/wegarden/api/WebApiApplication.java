@@ -13,7 +13,6 @@ import java.util.TimeZone;
         WebApiApplication.class,
 		Jsr310JpaConverters.class
 })
-
 public class WebApiApplication  {
 
     @PostConstruct

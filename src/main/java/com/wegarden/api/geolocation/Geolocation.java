@@ -1,6 +1,7 @@
 package com.wegarden.api.geolocation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,18 +11,24 @@ public class Geolocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
+    @ApiModelProperty(notes = "The database generated garden ID")
     private Long id;
 
     @NotNull
+    @ApiModelProperty(notes = "The location latitude")
     private Double latitude;
 
     @NotNull
+    @ApiModelProperty(notes = "The location longitude")
     private Double longitude;
 
+    @ApiModelProperty(notes = "The location address")
     private String address;
 
+    @ApiModelProperty(notes = "The location city")
     private String city;
 
+    @ApiModelProperty(notes = "The location country")
     private String country;
 
     public Geolocation( Double latitude,  Double longitude, String address, String city, String country) {
