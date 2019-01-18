@@ -12,7 +12,7 @@ public class GardenConverter {
     private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
     public GardenResponse convertToDTO(Garden garden){
         GardenResponse gardenResponse=  modelMapper.map(garden, GardenResponse.class);
-        if(garden.getImage() != null){
+        if(!StringUtils.isEmpty(garden.getImage())){
             gardenResponse.setImage(Base64Utils.encodeToString(garden.getImage()));
         }
         return gardenResponse;
@@ -20,8 +20,8 @@ public class GardenConverter {
 
     public Garden convertToEntity(GardenRequest gardenRequest){
         Garden garden =  modelMapper.map(gardenRequest,Garden.class);
-        // check if image is null
-        if(StringUtils.isEmpty(gardenRequest.getImage())){
+        // check if image is not null
+        if(!StringUtils.isEmpty(gardenRequest.getImage())){
             String[] data = gardenRequest.getImage().split(",") ; // handle case where base64 has this kind of form:"data:image/jpeg;base64,.."
             String base64Image = (data.length==2)?data[1]:data[0];
             garden.setImage(Base64Utils.decodeFromString(base64Image));

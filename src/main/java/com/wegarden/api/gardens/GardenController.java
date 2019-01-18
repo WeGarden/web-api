@@ -2,9 +2,8 @@ package com.wegarden.api.gardens;
 
 import com.wegarden.api.gardens.payload.GardenRequest;
 import com.wegarden.api.gardens.payload.GardenResponse;
-import com.wegarden.api.users.ApiResponse;
-import com.wegarden.api.users.RESPONSE_STATE;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -46,6 +45,7 @@ public class GardenController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Long> addGarden(@RequestBody @Valid GardenRequest gardenRequest){
         GardenResponse gardenResponse = gardenService.addGarden(gardenRequest);
         URI location = ServletUriComponentsBuilder

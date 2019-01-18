@@ -1,4 +1,4 @@
-package com.wegarden.api.users;
+package com.wegarden.api.users.roles;
 
 public enum  RoleName {
     ROLE_USER,

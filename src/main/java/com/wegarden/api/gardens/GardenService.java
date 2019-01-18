@@ -70,8 +70,8 @@ public class GardenService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         Geolocation geolocation = gardenRequest.getLocation();
-        // check if object is null
-        if(ObjectUtils.isEmpty(geolocation)){
+        // check if geolocation is not null
+        if(geolocation != null){
             geolocation = geolocationRepository.save(geolocation);
         }
 
