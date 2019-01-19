@@ -81,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers(AUTH_WHITELIST).permitAll()
                     .antMatchers("/","/api",
+                            "/h2/*", // for h2 database console
                             "/favicon.ico",
                             "/**/*.png",
                             "/**/*.gif",
@@ -98,6 +99,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticated();
         // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        http.headers().frameOptions().disable(); // for h2 console
     }
 }
