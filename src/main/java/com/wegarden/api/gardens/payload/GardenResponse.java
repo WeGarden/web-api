@@ -2,30 +2,44 @@ package com.wegarden.api.gardens.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wegarden.api.geolocation.Geolocation;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-public class GardenDTO {
-    @NotBlank
-    private String name;
+public class GardenResponse {
+    @ApiModelProperty(notes = "The database generated garden ID")
+    private Long id;
 
-    @NotBlank
+    @ApiModelProperty(notes = "The id of the user who created the garden")
     private Long userId;
 
-    @Valid
+    @ApiModelProperty(notes = "The garden name")
+    private String name;
+
+    @ApiModelProperty(notes = "The garden description")
     private String description;
 
-    @Valid
+    @ApiModelProperty(notes = "The type of garden (closed,open,...)")
     private String gardenType;
 
+    @ApiModelProperty(notes = "The location of the garden")
     private Geolocation location;
 
     @JsonProperty("private")
+    @ApiModelProperty(notes = "Tell if the garden can't only be see by others users")
     private boolean isPrivate;
 
-    // base64 image
+    @ApiModelProperty(notes = "A base64 image of the garden")
     private String image;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

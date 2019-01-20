@@ -1,10 +1,18 @@
 package com.wegarden.api.users;
 
-public class ApiResponse {
+import io.swagger.annotations.ApiModelProperty;
+
+public class SignUpResponse {
+
+    @ApiModelProperty(notes = "The status of the signup request which can be : \n" +
+            "- SUCCEED : 0\n " +
+            "- USERNAME_ALREADY_USED : 1\n " +
+            "- EMAIL_ALREADY_USED : 2")
     private int status;
+    @ApiModelProperty("A comprehensive message of the request status")
     private String message;
 
-    public ApiResponse(int status, String message) {
+    public SignUpResponse(int status, String message) {
         this.status = status;
         this.message = message;
     }
