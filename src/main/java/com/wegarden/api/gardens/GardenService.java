@@ -42,16 +42,15 @@ public class GardenService {
     public List<GardenResponse> getGardens(){
         return gardenRepository.findAll()
                 .stream()
-                .map(garden -> gardenConverter.convertToDTO(garden))
+                .map(gardenConverter::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     public List<GardenResponse> getGardenCreatedBy(Long userId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        User user = userRepository.getOne(userId); // fetch lazily
         return gardenRepository.findAllByUser(user)
                 .stream()
-                .map(garden -> gardenConverter.convertToDTO(garden))
+                .map(gardenConverter::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -60,15 +59,14 @@ public class GardenService {
                 .orElseThrow(() -> new ResourceNotFoundException("User","username",username));
         return gardenRepository.findAllByUser(user)
                 .stream()
-                .map(garden -> gardenConverter.convertToDTO(garden))
+                .map(gardenConverter::convertToDTO)
                 .collect(Collectors.toList());
     }
 
 
     public GardenResponse addGarden(GardenRequest gardenRequest){
         Long userId = gardenRequest.getUserId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        User user = userRepository.getOne(userId);
         Geolocation geolocation = gardenRequest.getLocation();
         // check if geolocation is not null
         if(geolocation != null){

@@ -34,7 +34,7 @@ public class GardenController {
     }
 
 
-    @GetMapping("/user/{userId}/")
+    @GetMapping("/user/{userId}")
     public List<GardenResponse> getGardensCreatedByUser(@PathVariable(value = "userId") Long userId){
         return gardenService.getGardenCreatedBy(userId);
     }
