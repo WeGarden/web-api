@@ -1,10 +1,13 @@
 package com.wegarden.api.gardens;
 
+import com.wegarden.api.coords.Coord;
 import com.wegarden.api.geolocation.Geolocation;
 import com.wegarden.api.users.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Garden {
@@ -22,13 +25,17 @@ public class Garden {
 
     private String gardenType;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Geolocation location;
 
     private boolean isPrivate;
 
     @Lob
     private byte[] image;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Coord> coordList = new ArrayList<>();
+
 
 
     public Garden(User user, @NotBlank String name, String description, String gardenType, Geolocation location, boolean isPrivate) {
@@ -106,5 +113,28 @@ public class Garden {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public List<Coord> getCoordList() {
+        return coordList;
+    }
+
+    public void setCoordList(List<Coord> coordList) {
+        this.coordList = coordList;
+    }
+
+    public Garden addCoord(Coord coord) {
+        coordList.add(coord);
+        return this;
+    }
+
+    public Garden removeCoord(Coord coord) {
+        coordList.remove(coord);
+        return this;
+    }
+
+    public Garden addAllCoords(List<Coord> coords){
+        coordList.addAll(coords);
+        return this;
     }
 }
