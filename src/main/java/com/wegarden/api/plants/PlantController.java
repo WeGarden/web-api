@@ -63,6 +63,6 @@ public class PlantController {
                 .fromCurrentContextPath().path("/api/plants/{id}")
                 .buildAndExpand(plant.getId()).toUri();
         return ResponseEntity.created(location)
-                .body(area.getId());
+                .body(plant.getId());
     }
 }
