@@ -1,6 +1,9 @@
 package com.wegarden.api.areas.payload;
 
+import com.wegarden.api.coords.Coord;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 
 public class AreaDTO {
     @ApiModelProperty(notes = "The database generated garden ID")
@@ -14,6 +17,9 @@ public class AreaDTO {
 
     @ApiModelProperty(notes = "A base64 image of the area")
     private String image;
+
+    @ApiModelProperty(notes = "A list of points representing the polygon  of the area")
+    private List<Coord> coordList;
 
     public Long getId() {
         return id;
@@ -45,5 +51,13 @@ public class AreaDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<Coord> getCoordList() {
+        return coordList;
+    }
+
+    public void setCoordList(List<Coord> coordList) {
+        this.coordList = coordList;
     }
 }

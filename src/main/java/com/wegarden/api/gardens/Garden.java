@@ -34,6 +34,7 @@ public class Garden {
     private byte[] image;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    // we need to use lists isntead of sets maintain the order for coordinate
     private List<Coord> coordList = new ArrayList<>();
 
 
