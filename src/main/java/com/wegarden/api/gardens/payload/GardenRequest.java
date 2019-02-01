@@ -1,9 +1,11 @@
 package com.wegarden.api.gardens.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wegarden.api.coords.Coord;
 import com.wegarden.api.geolocation.Geolocation;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class GardenRequest {
     @ApiModelProperty(notes = "The id of the user who created the garden")
@@ -28,6 +30,9 @@ public class GardenRequest {
 
     @ApiModelProperty(notes = "A base64 image of the garden")
     private String image;
+
+    @ApiModelProperty(notes = "A list of points representing the polygon  of the garden on the map")
+    private List<Coord> coordList;
 
     public String getName() {
         return name;
@@ -83,5 +88,13 @@ public class GardenRequest {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<Coord> getCoordList() {
+        return coordList;
+    }
+
+    public void setCoordList(List<Coord> coordList) {
+        this.coordList = coordList;
     }
 }

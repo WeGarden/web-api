@@ -1,5 +1,7 @@
 package com.wegarden.api.gardens;
 
+import com.wegarden.api.coords.Coord;
+import com.wegarden.api.coords.CoordRepository;
 import com.wegarden.api.exception.ResourceNotFoundException;
 import com.wegarden.api.gardens.payload.GardenConverter;
 import com.wegarden.api.gardens.payload.GardenRequest;
@@ -34,9 +36,6 @@ public class GardenService {
     private GardenRepository gardenRepository;
 
     @Autowired
-    private GeolocationRepository geolocationRepository;
-
-    @Autowired
     private GardenConverter gardenConverter;
 
     public List<GardenResponse> getGardens(){
@@ -67,14 +66,7 @@ public class GardenService {
     public GardenResponse addGarden(GardenRequest gardenRequest){
         Long userId = gardenRequest.getUserId();
         User user = userRepository.getOne(userId);
-        Geolocation geolocation = gardenRequest.getLocation();
-        // check if geolocation is not null
-        if(geolocation != null){
-            geolocation = geolocationRepository.save(geolocation);
-        }
-
         Garden garden = gardenConverter.convertToEntity(gardenRequest);
-        garden.setLocation(geolocation);
         garden.setUser(user);
         garden = gardenRepository.save(garden);
         return gardenConverter.convertToDTO(garden);
