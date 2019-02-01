@@ -1,12 +1,17 @@
 package com.wegarden.api.areas;
 
+import com.wegarden.api.coords.Coord;
 import com.wegarden.api.gardens.Garden;
 import com.wegarden.api.plants.Plant;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Area.
@@ -27,9 +32,13 @@ public class Area {
     @Column(name = "image")
     private byte[] image;
 
-
     @OneToMany(mappedBy = "area")
-    private Set<Plant> plants = new HashSet<>();
+    private List<Plant> plants = new ArrayList<>();
+
+    @OneToMany(fetch=FetchType.EAGER ,cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    // we need to use lists isntead of sets maintain the order for coordinate
+    private List<Coord> coordList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -66,11 +75,11 @@ public class Area {
     }
 
 
-    public Set<Plant> getPlants() {
+    public List<Plant> getPlants() {
         return plants;
     }
 
-    public Area plants(Set<Plant> plants) {
+    public Area plants(List<Plant> plants) {
         this.plants = plants;
         return this;
     }
@@ -87,7 +96,7 @@ public class Area {
         return this;
     }
 
-    public void setPlants(Set<Plant> plants) {
+    public void setPlants(List<Plant> plants) {
         this.plants = plants;
     }
 
@@ -102,6 +111,14 @@ public class Area {
 
     public void setGarden(Garden garden) {
         this.garden = garden;
+    }
+
+    public List<Coord> getCoordList() {
+        return coordList;
+    }
+
+    public void setCoordList(List<Coord> coordList) {
+        this.coordList = coordList;
     }
 }
 
