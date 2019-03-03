@@ -1,6 +1,12 @@
 package com.wegarden.api.plants.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wegarden.api.areas.Area;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.persistence.ManyToOne;
+import java.util.Date;
 
 public class PlantDTO {
     @ApiModelProperty(notes = "The database generated garden ID")
@@ -12,8 +18,21 @@ public class PlantDTO {
     @ApiModelProperty(notes = "The area name")
     private String name;
 
-    @ApiModelProperty(notes = "A base64 image of the area")
+    @ApiModelProperty(notes = "A base64 image of the plant")
     private String image;
+
+    @ManyToOne
+    private Area area;
+
+    @ApiModelProperty(notes = "the species of the plant")
+    private String species;
+
+    @ApiModelProperty(notes = "the family of the plant")
+    private String family;
+
+    @ApiModelProperty(notes = "represent the date of when the plant was added formatted as : {dd-MM-yyyy hh:mm:ss}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private Date date;
 
     public Long getId() {
         return id;
@@ -45,5 +64,29 @@ public class PlantDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
