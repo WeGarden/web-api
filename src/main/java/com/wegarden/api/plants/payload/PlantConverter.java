@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+
 @Component
 public class PlantConverter {
     private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
@@ -27,6 +29,7 @@ public class PlantConverter {
             plant.setImage(Base64Utils.decodeFromString(base64Image));
         }
         plant.setId(0L);
+        plant.setDate(new Date());
         return plant;
     }
 }

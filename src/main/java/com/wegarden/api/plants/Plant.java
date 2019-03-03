@@ -3,6 +3,7 @@ package com.wegarden.api.plants;
 import com.wegarden.api.areas.Area;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * A Plant.
@@ -21,6 +22,12 @@ public class Plant {
 
     @ManyToOne
     private Area area;
+
+    private String species;
+
+    private String family;
+
+    private Date date;
 
     public Long getId() {
         return id;
@@ -52,6 +59,31 @@ public class Plant {
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+
+    public String getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
 
