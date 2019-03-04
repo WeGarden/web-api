@@ -5,6 +5,10 @@ import com.wegarden.api.areas.payload.AreaDTO;
 import com.wegarden.api.exception.ResourceNotFoundException;
 import com.wegarden.api.gardens.Garden;
 import com.wegarden.api.gardens.GardenRepository;
+import com.wegarden.api.observations.Statement;
+import com.wegarden.api.observations.payload.StatementConverter;
+import com.wegarden.api.observations.payload.StatementRequest;
+import com.wegarden.api.observations.payload.StatementResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +34,9 @@ public class AreaController {
 
     @Autowired
     private AreaConverter areaConverter;
+
+    @Autowired
+    private StatementConverter statementConverter;
 
     @GetMapping("/areas")
     public List<AreaDTO> getAreas(){
@@ -70,6 +77,47 @@ public class AreaController {
                 .body(area.getId());
     }
 
+    @GetMapping("/areas/{areaId}/statements")
+    public List<StatementResponse> getStatements(@PathVariable(value = "areaId") Long areaId){
+        Area area =  areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
+        return area.getStatements()
+                .stream()
+                .map(statementConverter::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/areas/{areaId}/observations")
+    public List<StatementResponse> getObservations(@PathVariable(value = "areaId") Long areaId){
+        Area area =  areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
+        List<Statement> statements = area.getStatements();
+        return area.getStatements()
+                .stream()
+                .filter(e -> e.getStatementType().equals("observation"))
+                .map(statementConverter::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/areas/{areaId}/actions")
+    public List<StatementResponse> getActions(@PathVariable(value = "areaId") Long areaId){
+        Area area =  areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
+        return area.getStatements()
+                .stream()
+                .filter(e -> e.getStatementType().equals("action"))
+                .map(statementConverter::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/areas/{areaId}/statements")
+    public void addSatement(@RequestBody StatementRequest statementRequest, @PathVariable(value = "areaId") Long areaId){
+        Area area =  areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
+        Statement statement = statementConverter.convertToEntity(statementRequest);
+        area = area.addStatement(statement);
+        areaRepository.save(area);
+    }
 
 
 

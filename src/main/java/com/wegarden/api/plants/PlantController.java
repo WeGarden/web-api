@@ -108,7 +108,7 @@ public class PlantController {
     }
 
     @PostMapping("/plants/{plantId}/statements")
-    public void addSatements(@RequestBody StatementRequest statementRequest, @PathVariable(value = "plantId") Long plantId){
+    public void addSatement(@RequestBody StatementRequest statementRequest, @PathVariable(value = "plantId") Long plantId){
         Plant plant =  plantRepository.findById(plantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plant","id",plantId));
         Statement statement = statementConverter.convertToEntity(statementRequest);
