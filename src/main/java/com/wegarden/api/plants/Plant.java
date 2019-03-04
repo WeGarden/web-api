@@ -1,9 +1,14 @@
 package com.wegarden.api.plants;
 
 import com.wegarden.api.areas.Area;
+import com.wegarden.api.observations.Observation;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A Plant.
@@ -28,6 +33,10 @@ public class Plant {
     private String family;
 
     private Date date;
+
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Observation> observations = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -84,6 +93,19 @@ public class Plant {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public List<Observation> getObservations() {
+        return observations;
+    }
+
+    public Plant addObservation(Observation observation) {
+        this.observations.add(observation);
+        return this;
+    }
+
+    public void setObservations(List<Observation> observations) {
+        this.observations = observations;
     }
 }
 
