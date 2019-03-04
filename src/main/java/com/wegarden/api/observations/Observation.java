@@ -1,6 +1,6 @@
 package com.wegarden.api.observations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wegarden.api.protocols.Protocol;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -17,10 +17,10 @@ public class Observation {
 
     private String name;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
 
     @ManyToOne
-    @JsonIgnore
     private Protocol protocol;
 
     @ElementCollection(fetch=FetchType.EAGER)

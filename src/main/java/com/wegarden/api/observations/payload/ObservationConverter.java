@@ -11,12 +11,12 @@ import java.util.Date;
 public class ObservationConverter {
 
     private ModelMapper modelMapper = ModelUtilMapper.getModelMapper();
-    public ObservationDTO convertToDTO(Observation observation){
-        return modelMapper.map(observation, ObservationDTO.class);
+    public ObservationRequest convertToDTO(Observation observation){
+        return modelMapper.map(observation, ObservationRequest.class);
     }
 
-    public Observation convertToEntity(ObservationDTO observationDTO){
-        Observation observation=  modelMapper.map(observationDTO,Observation.class);
+    public Observation convertToEntity(ObservationRequest observationRequest){
+        Observation observation=  modelMapper.map(observationRequest,Observation.class);
         observation.setId(0L);
         observation.setDate(new Date());
         return observation;

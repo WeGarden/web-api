@@ -5,25 +5,15 @@ import com.wegarden.api.observations.Value;
 import java.util.Date;
 import java.util.List;
 
-public class ObservationDTO {
-
-    private Long id;
+public class ObservationRequest {
 
     private String name;
 
-    private Date date;
 
     private Long protocolId;
 
     private List<Value> values;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -33,13 +23,6 @@ public class ObservationDTO {
         this.name = name;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     public List<Value> getValues() {
         return values;

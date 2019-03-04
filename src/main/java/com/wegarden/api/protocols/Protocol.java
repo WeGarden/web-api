@@ -1,10 +1,9 @@
 package com.wegarden.api.protocols;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wegarden.api.observations.Entry;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.*;
@@ -20,6 +19,7 @@ public class Protocol {
 
     private String description;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date = new Date();
 
     @ElementCollection(fetch=FetchType.EAGER)
