@@ -30,7 +30,6 @@ public class PlantDTO {
     @ApiModelProperty(notes = "the family of the plant")
     private String family;
 
-    @ApiModelProperty(notes = "represent the date of when the plant was added formatted as : {dd-MM-yyyy hh:mm:ss}")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
 
