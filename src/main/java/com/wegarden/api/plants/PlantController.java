@@ -3,10 +3,11 @@ package com.wegarden.api.plants;
 import com.wegarden.api.areas.Area;
 import com.wegarden.api.areas.AreaRepository;
 import com.wegarden.api.exception.ResourceNotFoundException;
-import com.wegarden.api.observations.Observation;
-import com.wegarden.api.observations.ObservationRepository;
-import com.wegarden.api.observations.payload.ObservationConverter;
-import com.wegarden.api.observations.payload.ObservationRequest;
+import com.wegarden.api.observations.Statement;
+import com.wegarden.api.observations.StatementRepository;
+import com.wegarden.api.observations.payload.StatementConverter;
+import com.wegarden.api.observations.payload.StatementRequest;
+import com.wegarden.api.observations.payload.StatementResponse;
 import com.wegarden.api.plants.payload.PlantConverter;
 import com.wegarden.api.plants.payload.PlantDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,7 @@ public class PlantController {
     private PlantConverter plantConverter;
 
     @Autowired
-    private ObservationConverter observationConverter;
-
-    @Autowired
-    private ObservationRepository observationRepository;
+    private StatementConverter statementConverter;
 
     @GetMapping("/plants")
     public List<PlantDTO> getPlants(){
@@ -76,19 +74,45 @@ public class PlantController {
                 .body(plant.getId());
     }
 
-    @GetMapping("/plants/{plantId}/observations")
-    public List<Observation> getObservations(@PathVariable(value = "plantId") Long plantId){
+    @GetMapping("/plants/{plantId}/statements")
+    public List<StatementResponse> getStatements(@PathVariable(value = "plantId") Long plantId){
         Plant plant =  plantRepository.findById(plantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plant","id",plantId));
-        return plant.getObservations();
+        return plant.getStatements()
+                .stream()
+                .map(statementConverter::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    @PostMapping("/plants/{plantId}/observations")
-    public void addObservation(@RequestBody ObservationRequest observationRequest, @PathVariable(value = "plantId") Long plantId){
+    @GetMapping("/plants/{plantId}/observations")
+    public List<StatementResponse> getObservations(@PathVariable(value = "plantId") Long plantId){
         Plant plant =  plantRepository.findById(plantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plant","id",plantId));
-        Observation observation = observationConverter.convertToEntity(observationRequest);
-        plant = plant.addObservation(observation);
+        List<Statement> statements = plant.getStatements();
+        return plant.getStatements()
+                .stream()
+                .filter(e -> e.getStatementType().equals("observation"))
+                .map(statementConverter::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/plants/{plantId}/actions")
+    public List<StatementResponse> getActions(@PathVariable(value = "plantId") Long plantId){
+        Plant plant =  plantRepository.findById(plantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Plant","id",plantId));
+        return plant.getStatements()
+                .stream()
+                .filter(e -> e.getStatementType().equals("action"))
+                .map(statementConverter::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/plants/{plantId}/statements")
+    public void addSatements(@RequestBody StatementRequest statementRequest, @PathVariable(value = "plantId") Long plantId){
+        Plant plant =  plantRepository.findById(plantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Plant","id",plantId));
+        Statement statement = statementConverter.convertToEntity(statementRequest);
+        plant = plant.addStatement(statement);
         plantRepository.save(plant);
     }
 }

@@ -1,7 +1,7 @@
 package com.wegarden.api.plants;
 
 import com.wegarden.api.areas.Area;
-import com.wegarden.api.observations.Observation;
+import com.wegarden.api.observations.Statement;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -36,7 +36,7 @@ public class Plant {
 
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<Observation> observations = new ArrayList<>();
+    private List<Statement> statements = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -95,17 +95,17 @@ public class Plant {
         this.date = date;
     }
 
-    public List<Observation> getObservations() {
-        return observations;
+    public List<Statement> getStatements() {
+        return statements;
     }
 
-    public Plant addObservation(Observation observation) {
-        this.observations.add(observation);
+    public Plant addStatement(Statement statement) {
+        this.statements.add(statement);
         return this;
     }
 
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
     }
 }
 

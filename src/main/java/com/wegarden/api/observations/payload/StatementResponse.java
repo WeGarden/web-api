@@ -1,31 +1,31 @@
-package com.wegarden.api.observations;
+package com.wegarden.api.observations.payload;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wegarden.api.observations.Value;
 import com.wegarden.api.protocols.Protocol;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
-@Entity
-public class Observation {
+public class StatementResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
+    @ApiModelProperty(notes = "The date of the the statement", example = "dd-MM-yyyy hh:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
 
-    @ManyToOne
     private Protocol protocol;
 
-    @ElementCollection(fetch=FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Value> values = new ArrayList<>();
+    @ApiModelProperty(notes = "List of values to each entry of the protocol")
+    private List<Value> values;
+
+    @ApiModelProperty(allowableValues = "observation, action", notes = "type of the statement")
+    private String statementType;
 
     public Long getId() {
         return id;
@@ -65,5 +65,13 @@ public class Observation {
 
     public void setValues(List<Value> values) {
         this.values = values;
+    }
+
+    public String getStatementType() {
+        return statementType;
+    }
+
+    public void setStatementType(String statementType) {
+        this.statementType = statementType;
     }
 }
