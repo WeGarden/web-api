@@ -1,12 +1,11 @@
 package com.wegarden.api.plants.payload;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wegarden.api.areas.Area;
+import com.wegarden.api.coords.Coord;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.List;
 
 public class PlantDTO {
     @ApiModelProperty(notes = "The database generated garden ID")
@@ -21,9 +20,6 @@ public class PlantDTO {
     @ApiModelProperty(notes = "A base64 image of the plant")
     private String image;
 
-    @ManyToOne
-    private Area area;
-
     @ApiModelProperty(notes = "the species of the plant")
     private String species;
 
@@ -32,6 +28,9 @@ public class PlantDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
+
+    @ApiModelProperty(notes = "A list of points representing the polygon  of the area")
+    private List<Coord> coordList;
 
     public Long getId() {
         return id;
@@ -87,5 +86,14 @@ public class PlantDTO {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+
+    public List<Coord> getCoordList() {
+        return coordList;
+    }
+
+    public void setCoordList(List<Coord> coordList) {
+        this.coordList = coordList;
     }
 }
