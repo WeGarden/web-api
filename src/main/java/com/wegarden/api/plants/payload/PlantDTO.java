@@ -29,8 +29,8 @@ public class PlantDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
 
-    @ApiModelProperty(notes = "A list of points representing the polygon  of the area")
-    private List<Coord> coordList;
+    @ApiModelProperty(notes = "A point representing the position of the plant")
+    private Coord coord;
 
     public Long getId() {
         return id;
@@ -88,12 +88,11 @@ public class PlantDTO {
         this.date = date;
     }
 
-
-    public List<Coord> getCoordList() {
-        return coordList;
+    public Coord getCoord() {
+        return coord;
     }
 
-    public void setCoordList(List<Coord> coordList) {
-        this.coordList = coordList;
+    public void setCoord(Coord coord) {
+        this.coord = coord;
     }
 }

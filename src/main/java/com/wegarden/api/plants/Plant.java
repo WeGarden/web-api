@@ -39,10 +39,8 @@ public class Plant {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Statement> statements = new ArrayList<>();
 
-    @OneToMany(fetch=FetchType.EAGER ,cascade = CascadeType.ALL)
-    @Fetch(value = FetchMode.SUBSELECT)
-    // we need to use lists isntead of sets maintain the order for coordinate
-    private List<Coord> coordList = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    private Coord coord;
 
     public Long getId() {
         return id;
@@ -105,21 +103,21 @@ public class Plant {
         return statements;
     }
 
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
+    }
+
     public Plant addStatement(Statement statement) {
         this.statements.add(statement);
         return this;
     }
 
-    public void setStatements(List<Statement> statements) {
-        this.statements = statements;
+    public Coord getCoord() {
+        return coord;
     }
 
-    public List<Coord> getCoordList() {
-        return coordList;
-    }
-
-    public void setCoordList(List<Coord> coordList) {
-        this.coordList = coordList;
+    public void setCoord(Coord coord) {
+        this.coord = coord;
     }
 }
 
