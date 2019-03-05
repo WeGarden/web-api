@@ -1,6 +1,7 @@
 package com.wegarden.api.plants;
 
 import com.wegarden.api.areas.Area;
+import com.wegarden.api.coords.Coord;
 import com.wegarden.api.observations.Statement;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -37,6 +38,11 @@ public class Plant {
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Statement> statements = new ArrayList<>();
+
+    @OneToMany(fetch=FetchType.EAGER ,cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    // we need to use lists isntead of sets maintain the order for coordinate
+    private List<Coord> coordList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -106,6 +112,14 @@ public class Plant {
 
     public void setStatements(List<Statement> statements) {
         this.statements = statements;
+    }
+
+    public List<Coord> getCoordList() {
+        return coordList;
+    }
+
+    public void setCoordList(List<Coord> coordList) {
+        this.coordList = coordList;
     }
 }
 
