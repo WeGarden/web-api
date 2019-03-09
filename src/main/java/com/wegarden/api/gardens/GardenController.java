@@ -55,6 +55,11 @@ public class GardenController {
                 .body(gardenResponse.getId());
     }
 
+    @DeleteMapping("/{gardenId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGarden(@PathVariable(value = "gardenId") Long gardenId){
+        gardenService.deleteGarden(gardenId);
+    }
 
 
 

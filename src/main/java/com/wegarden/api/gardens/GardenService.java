@@ -81,6 +81,11 @@ public class GardenService {
     }
 
 
+    public void deleteGarden(Long gardenId){
+        Garden garden = gardenRepository.findById(gardenId)
+                .orElseThrow(() -> new ResourceNotFoundException("Garden","id",gardenId));
+        gardenRepository.deleteById(gardenId);
+    }
 
 
 }

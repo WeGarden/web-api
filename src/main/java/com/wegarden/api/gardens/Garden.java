@@ -1,5 +1,6 @@
 package com.wegarden.api.gardens;
 
+import com.wegarden.api.areas.Area;
 import com.wegarden.api.coords.Coord;
 import com.wegarden.api.geolocation.Geolocation;
 import com.wegarden.api.users.User;
@@ -37,7 +38,8 @@ public class Garden {
     // we need to use lists isntead of sets maintain the order for coordinate
     private List<Coord> coordList = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "garden",cascade = CascadeType.ALL)
+    private List<Area> areas = new ArrayList<>();
 
     public Garden(User user, @NotBlank String name, String description, String gardenType, Geolocation location, boolean isPrivate) {
         this.user = user;
@@ -137,5 +139,13 @@ public class Garden {
     public Garden addAllCoords(List<Coord> coords){
         coordList.addAll(coords);
         return this;
+    }
+
+    public List<Area> getAreas() {
+        return areas;
+    }
+
+    public void setAreas(List<Area> areas) {
+        this.areas = areas;
     }
 }
