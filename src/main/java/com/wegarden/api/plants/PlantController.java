@@ -52,7 +52,8 @@ public class PlantController {
 
     @GetMapping("/areas/{areaId}/plants")
     public List<PlantDTO> getPlantByAreaId(@PathVariable(value = "areaId") Long areaId){
-        Area area = areaRepository.getOne(areaId);
+        Area area = areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
         return plantRepository.findAllByArea(area)
                 .stream()
                 .map(plantConverter::convertToDTO)
@@ -63,7 +64,8 @@ public class PlantController {
     @PostMapping("/areas/{areaId}/plants")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Long> createPlant(@RequestBody PlantDTO plantDTO, @PathVariable(value = "areaId") Long areaId){
-        Area area = areaRepository.getOne(areaId);
+        Area area = areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
         Plant plant = plantConverter.convertToEntity(plantDTO);
         plant.setArea(area);
         plant = plantRepository.save(plant);

@@ -46,7 +46,8 @@ public class GardenService {
     }
 
     public List<GardenResponse> getGardenCreatedBy(Long userId){
-        User user = userRepository.getOne(userId); // fetch lazily
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         return gardenRepository.findAllByUser(user)
                 .stream()
                 .map(gardenConverter::convertToDTO)
@@ -65,7 +66,8 @@ public class GardenService {
 
     public GardenResponse addGarden(GardenRequest gardenRequest){
         Long userId = gardenRequest.getUserId();
-        User user = userRepository.getOne(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         Garden garden = gardenConverter.convertToEntity(gardenRequest);
         garden.setUser(user);
         garden = gardenRepository.save(garden);
@@ -79,6 +81,11 @@ public class GardenService {
     }
 
 
+    public void deleteGarden(Long gardenId){
+        Garden garden = gardenRepository.findById(gardenId)
+                .orElseThrow(() -> new ResourceNotFoundException("Garden","id",gardenId));
+        gardenRepository.deleteById(gardenId);
+    }
 
 
 }
