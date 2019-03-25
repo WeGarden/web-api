@@ -119,6 +119,13 @@ public class AreaController {
         areaRepository.save(area);
     }
 
+    @DeleteMapping("/areas/{areaId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteArea(@PathVariable(value = "areaId")Long areaId){
+        Area area = areaRepository.findById(areaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Area","id",areaId));
+        areaRepository.deleteById(areaId);
+    }
 
 
 }
