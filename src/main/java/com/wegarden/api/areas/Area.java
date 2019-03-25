@@ -33,7 +33,7 @@ public class Area {
     @Column(name = "image")
     private byte[] image;
 
-    @OneToMany(mappedBy = "area")
+    @OneToMany(mappedBy = "area",cascade = CascadeType.ALL)
     private List<Plant> plants = new ArrayList<>();
 
     @OneToMany(fetch=FetchType.EAGER ,cascade = CascadeType.ALL)

@@ -117,4 +117,12 @@ public class PlantController {
         plant = plant.addStatement(statement);
         plantRepository.save(plant);
     }
+
+    @DeleteMapping("/plants/{plantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePlant(@PathVariable(value = "plantId")Long plantId){
+        Plant plant = plantRepository.findById(plantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Plant","id",plantId));
+        plantRepository.deleteById(plantId);
+    }
 }
